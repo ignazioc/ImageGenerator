@@ -1,0 +1,29 @@
+<div class="container">
+  
+  <div class="row justify-content-center">
+    <div class="col col-6">
+      <img src="<%= uri(addr = "logo.png") %>"/>
+      <form action="/" method="POST">
+        <h1 class="formlegend headline-medium">Text</h1>
+        <input type="text" id="text_line1" class="form-control" name="line1" placeholder="1st line of text" required="" autofocus="" value="<%= @line1 if !@line1.nil? %>"/>
+        <input type="text" id="text_line2" class="form-control" name="line2" placeholder="2nd line of text" required="" autofocus="" value="<%= @line2 if !@line2.nil? %>"/>
+        
+        <h1 class="formlegend headline-medium">Color</h1>
+        
+        <div class="form-group">
+          <select name="color" class="form-control">
+            <option value="green">Green</option>
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Download your image</button>
+        </div>
+      </form>
+      <% if !@generated_name.nil? %>       
+        <img src="<%= uri(addr = @generated_name) %>"/>
+      <% end %>
+    </div>
+  </div>
+</div>
