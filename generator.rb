@@ -9,8 +9,9 @@ class Generator
 
     lines.each_with_index do | line, index |
       margin = ""
-      if index == 0
-        puts "TOP"
+      if index == 0 && lines.count == 1
+        margin = "-gravity north -splice 0x10 -gravity south -splice 0x10"
+      elsif index == 0
         margin = "-gravity north -splice 0x10 -gravity south -splice 0x4"
       elsif index == lines.count - 1
         margin = "-gravity north -splice 0x11 -gravity south -splice 0x15"
