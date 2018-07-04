@@ -10,7 +10,6 @@ class App < Sinatra::Base
   configure :development do
     register Sinatra::Reloader
     after_reload do
-      puts 'reloaded'
     end
   end
 

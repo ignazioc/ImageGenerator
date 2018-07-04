@@ -6,7 +6,6 @@ class Generator
   end
 
   def generate(lines, color = "rgb(135, 185, 25)")
-    puts "This is the prefix #{self.prefix}"
 
     lines.each_with_index do | line, index |
       margin = ""
@@ -14,7 +13,6 @@ class Generator
         puts "TOP"
         margin = "-gravity north -splice 0x10 -gravity south -splice 0x4"
       elsif index == lines.count - 1
-        puts "BOTTOM"
         margin = "-gravity north -splice 0x11 -gravity south -splice 0x15"
       end
 
