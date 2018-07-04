@@ -18,7 +18,7 @@ class App < Sinatra::Base
   set :port, 80
 
 
-  post '/' do
+  get '/generate' do
     @line1 = params[:line1]
     @line2 = params[:line2]
     @line3 = params[:line3]
