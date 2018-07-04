@@ -30,5 +30,5 @@ Or run the one on the hub.
 docker run -d \
 	-p 8080:80 \
 	--restart on-failure \
-	ignazioc/image_generator:0.1
+	ignazioc/image_generator:0.2
 ```
