@@ -51,6 +51,7 @@ class App < Sinatra::Base
     map["green"] = "rgb(135, 185, 25)"
     map["red"] = "rgb(229, 50, 56)"
     map["blue"] = "rgb(0, 98, 212)"
+    map["yellow"] = "rgb(245, 175, 2)"
     map
   end
 
