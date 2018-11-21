@@ -32,3 +32,12 @@ docker run -d \
 	--restart on-failure \
 	ignazioc/image_generator:0.2
 ```
+
+
+# How to update the docker image:
+
+1. Login to docker `docker login --username=yourhubusername --email=youremail@company.com`
+2. Build the docker image `docker build -t ignazioc/image_generator:0.3 .`
+3. Push on the hub `docker push ignazioc/image_generator`
+
+For running on a single machine, just run the docker command. For a multi-docker environment find the docker-compose file, change the tag of the image and execute again with `docker-compose up -d` 
