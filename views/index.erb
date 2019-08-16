@@ -5,9 +5,12 @@
       <img src="<%= uri(addr = "logo.png") %>"/>
       <form action="/generate" method="GET">
         <h1 class="formlegend headline-medium">Text</h1>
-        <input type="text" id="text_line1" class="form-control" name="line1" placeholder="1st line of text" required="" autofocus="" value="<%= @line1 if !@line1.nil? %>"/>
-        <input type="text" id="text_line2" class="form-control" name="line2" placeholder="2nd line of text"  autofocus="" value="<%= @line2 if !@line2.nil? %>"/>
         
+
+        <div class="form-group purple-border">
+          <textarea class="form-control" id="exampleFormControlTextarea4" name="line1" placeholder="Your text"  rows="5" autofocus=""><%= @line1 if !@line1.nil? %></textarea>
+        </div>
+ 
         <h1 class="formlegend headline-medium">Color</h1>
         
         <div class="form-group">

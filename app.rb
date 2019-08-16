@@ -20,26 +20,16 @@ class App < Sinatra::Base
 
   get '/generate' do
     @line1 = params[:line1]
-    @line2 = params[:line2]
-    @line3 = params[:line3]
     puts params
     color = colorMap[params[:color]]
 
-    Dir.glob('*.png').each { |file| File.delete(file) }
+    prefix = random_name
+    g = Generator.new(prefix, color)
+    g.render(@line1)
+    generated_name = "#{prefix}_full.png"
+    FileUtils.cp(generated_name, File.join('public', generated_name))
 
-    sentences = []
-    sentences << @line1.upcase if @line1.length > 0
-    sentences << @line2.upcase if @line2.length > 0
-    #sentences << @line3.upcase if @line3.length > 0
-    puts "*** #{sentences}"
-    gg = Generator.new(random_name)
-    @generated_name = gg.generate(sentences, color)
-    FileUtils.cp(@generated_name, File.join('public', @generated_name))
-
-    # erb :index
-    fullText = sentences.join(" ")
-    filename = sanitize_filename(fullText)
-    send_file "./public/#{@generated_name}", :filename => "#{filename}.png", :type => 'Application/image'
+    send_file "./public/#{generated_name}", :filename => "#{generated_name}", :type => 'Application/image'
   end
 
   get "/" do
