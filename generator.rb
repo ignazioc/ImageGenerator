@@ -1,21 +1,22 @@
 class Token
-  attr_accessor :index, :text, :type, :textColor
+  attr_accessor :index, :text, :type, :textColor, :backgroundColor
 
-  def initialize(index, text, type, textColor = "white")
+  def initialize(index, text, type, textColor, backgroundColor)
     self.index = index
     self.text = text
     self.type = type
     self.textColor = textColor
+    self.backgroundColor = backgroundColor
   end
 
   def extra()
     return case type
     when :left
-      "-gravity east -splice 40x0"
+      "-gravity east -splice 40x0 -fill \"#{textColor}\""
     when :bold
-      "-background white -fill \"#{textColor}\" -bordercolor white -border 40x8 -kerning 1.5"
+      "-background \"#{textColor}\" -fill \"#{backgroundColor}\" -bordercolor \"#{textColor}\" -border 40x8 -kerning 1.5"
     when :right
-      "-splice 40x0"
+      "-splice 40x0 -fill \"#{textColor}\""
     else
       "Error"
     end
@@ -44,7 +45,7 @@ class Line
     end
   end
 
-  def to_tokens(color)
+  def to_tokens(textColor, backgroundColor = "white")
     indices = (0...text.length).find_all { |i| text[i,1] == '*' }
     if indices.count != 2
       puts "Wrong number of stars"
@@ -55,9 +56,9 @@ class Line
     right = text.slice(indices[1] + 1..-1)
 
     arr = []
-    arr <<  Token.new(1, left.strip, :left) if left.length > 0
-    arr <<  Token.new(2, bold.strip, :bold, color) if bold.length > 0
-    arr <<  Token.new(3, right.strip, :right) if right.length > 0
+    arr <<  Token.new(1, left.strip, :left, textColor, backgroundColor) if left.length > 0
+    arr <<  Token.new(2, bold.strip, :bold, textColor, backgroundColor) if bold.length > 0
+    arr <<  Token.new(3, right.strip, :right, textColor, backgroundColor) if right.length > 0
     arr
   end
 
@@ -67,11 +68,12 @@ class Line
 end
 
 class Generator
-  attr_accessor :prefix, :backgorundColor
+  attr_accessor :prefix, :backgorundColor, :textColor
 
-  def initialize(prefix, color = "rgb(135, 185, 25)")
+  def initialize(prefix, color = "rgb(135, 185, 25)", textColor = "rgb(255, 0, 0)")
     self.prefix = prefix
     self.backgorundColor = color
+    self.textColor = textColor
   end
 
 
@@ -90,7 +92,7 @@ class Generator
     lines = parse(t)
     lines.each { | l | 
       if l.hash_bold
-        tokens = l.to_tokens(backgorundColor)
+        tokens = l.to_tokens(textColor, backgorundColor)
         tokens.each { | t | renderToken(t) }
         mergeTokensIntoLine(l.index)
         cleanupTokens
@@ -107,7 +109,7 @@ class Generator
     convert \
       -background "#{backgorundColor}" \
       -font "Paralucent Condensed Heavy.otf" \
-      -fill white \
+      -fill "#{textColor}" \
       -bordercolor "#{backgorundColor}" \
       -pointsize 210 \
       #{line.extra} \

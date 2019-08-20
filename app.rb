@@ -19,12 +19,13 @@ class App < Sinatra::Base
 
 
   get '/generate' do
+    puts params
     @line1 = params[:line1]
     puts params
-    color = colorMap[params[:color]]
+    backgorund, textColor = colorMap[params[:color]]
 
     prefix = random_name
-    g = Generator.new(prefix, color)
+    g = Generator.new(prefix, backgorund, textColor)
     g.render(@line1)
     generated_name = "#{prefix}_full.png"
     FileUtils.cp(generated_name, File.join('public', generated_name))
@@ -37,11 +38,15 @@ class App < Sinatra::Base
   end
 
   def colorMap
-    map = Hash.new("rgb(135, 185, 25)")
-    map["green"] = "rgb(135, 185, 25)"
-    map["red"] = "rgb(229, 50, 56)"
-    map["blue"] = "rgb(0, 98, 212)"
-    map["yellow"] = "rgb(245, 175, 2)"
+    map = Hash.new()
+    map["green_background"] = "rgb(135, 185, 25)", "rgb(255, 255, 255)"
+    map["red_background"] = "rgb(229, 50, 56)", "rgb(255, 255, 255)"
+    map["blue_background"] = "rgb(0, 98, 212)", "rgb(255, 255, 255)"
+    map["yellow_background"] = "rgb(245, 175, 2)", "rgb(255, 255, 255)"
+    map["green_text"] = "rgb(255, 255, 255)", "rgb(135, 185, 25)"
+    map["red_text"] = "rgb(255, 255, 255)", "rgb(229, 50, 56)"
+    map["blue_text"] = "rgb(255, 255, 255)", "rgb(0, 98, 212)"
+    map["yellow_text"] = "rgb(255, 255, 255)", "rgb(245, 175, 2)"
     map
   end
 
