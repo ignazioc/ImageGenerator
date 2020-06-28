@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rubygems'
 require 'bundler'
 require 'fileutils'
-Bundler.require()
+Bundler.require
 
-require "sinatra/reloader"
-require_relative "generator.rb"
+require 'sinatra/reloader'
+require_relative 'generator.rb'
 
 class App < Sinatra::Base
   configure :development do
@@ -30,28 +32,28 @@ class App < Sinatra::Base
     generated_name = "#{prefix}_full.png"
     FileUtils.cp(generated_name, File.join('public', generated_name))
 
-    send_file "./public/#{generated_name}", :filename => "#{generated_name}", :type => 'Application/image'
+    send_file "./public/#{generated_name}", filename: generated_name.to_s, type: 'Application/image'
   end
 
-  get "/" do
+  get '/' do
     erb :index
   end
 
   def colorMap
-    map = Hash.new()
-    map["green_background"] = "rgb(135, 185, 25)", "rgb(255, 255, 255)"
-    map["red_background"] = "rgb(229, 50, 56)", "rgb(255, 255, 255)"
-    map["blue_background"] = "rgb(0, 98, 212)", "rgb(255, 255, 255)"
-    map["yellow_background"] = "rgb(245, 175, 2)", "rgb(255, 255, 255)"
-    map["green_text"] = "rgb(255, 255, 255)", "rgb(135, 185, 25)"
-    map["red_text"] = "rgb(255, 255, 255)", "rgb(229, 50, 56)"
-    map["blue_text"] = "rgb(255, 255, 255)", "rgb(0, 98, 212)"
-    map["yellow_text"] = "rgb(255, 255, 255)", "rgb(245, 175, 2)"
+    map = {}
+    map['green_background'] = 'rgb(135, 185, 25)', 'rgb(255, 255, 255)'
+    map['red_background'] = 'rgb(229, 50, 56)', 'rgb(255, 255, 255)'
+    map['blue_background'] = 'rgb(0, 98, 212)', 'rgb(255, 255, 255)'
+    map['yellow_background'] = 'rgb(245, 175, 2)', 'rgb(255, 255, 255)'
+    map['green_text'] = 'rgb(255, 255, 255)', 'rgb(135, 185, 25)'
+    map['red_text'] = 'rgb(255, 255, 255)', 'rgb(229, 50, 56)'
+    map['blue_text'] = 'rgb(255, 255, 255)', 'rgb(0, 98, 212)'
+    map['yellow_text'] = 'rgb(255, 255, 255)', 'rgb(245, 175, 2)'
     map
   end
 
   def random_name
-    (0...8).map { (65 + rand(26)).chr }.join
+    (0...8).map { rand(65..90).chr }.join
   end
 
   def sanitize_filename(filename)

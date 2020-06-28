@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Token
   attr_accessor :index, :text, :type, :textColor, :backgroundColor
 
@@ -9,8 +11,8 @@ class Token
     self.backgroundColor = backgroundColor
   end
 
-  def extra()
-    return case type
+  def extra
+    case type
     when :left
       "-gravity east -splice 40x0 -fill \"#{textColor}\""
     when :bold
@@ -18,7 +20,7 @@ class Token
     when :right
       "-splice 40x0 -fill \"#{textColor}\""
     else
-      "Error"
+      'Error'
     end
   end
 end
@@ -32,23 +34,23 @@ class Line
     self.type = type
   end
 
-  def extra()
-    return case type
+  def extra
+    case type
     when :first
-      "-gravity south -splice 0x10"
+      '-gravity south -splice 0x10'
     when :middle
-      "-border  0x10"
+      '-border  0x10'
     when :last
-      "-splice 0x15"
+      '-splice 0x15'
     else
-      "Error"
+      'Error'
     end
   end
 
-  def to_tokens(textColor, backgroundColor = "white")
-    indices = (0...text.length).find_all { |i| text[i,1] == '*' }
+  def to_tokens(textColor, backgroundColor = 'white')
+    indices = (0...text.length).find_all { |i| text[i, 1] == '*' }
     if indices.count != 2
-      puts "Wrong number of stars"
+      puts 'Wrong number of stars'
       exit 1
     end
     left = text.slice(0...indices[0])
@@ -56,13 +58,19 @@ class Line
     right = text.slice(indices[1] + 1..-1)
 
     arr = []
-    arr <<  Token.new(1, left.strip, :left, textColor, backgroundColor) if left.length > 0
-    arr <<  Token.new(2, bold.strip, :bold, textColor, backgroundColor) if bold.length > 0
-    arr <<  Token.new(3, right.strip, :right, textColor, backgroundColor) if right.length > 0
+    unless left.empty?
+      arr <<  Token.new(1, left.strip, :left, textColor, backgroundColor)
+    end
+    unless bold.empty?
+      arr <<  Token.new(2, bold.strip, :bold, textColor, backgroundColor)
+    end
+    unless right.empty?
+      arr <<  Token.new(3, right.strip, :right, textColor, backgroundColor)
+    end
     arr
   end
 
-  def hash_bold()
+  def hash_bold
     (text =~ /\*.+\*/) != nil
   end
 end
@@ -70,36 +78,35 @@ end
 class Generator
   attr_accessor :prefix, :backgorundColor, :textColor
 
-  def initialize(prefix, color = "rgb(135, 185, 25)", textColor = "rgb(255, 0, 0)")
+  def initialize(prefix, color = 'rgb(135, 185, 25)', textColor = 'rgb(255, 0, 0)')
     self.prefix = prefix
     self.backgorundColor = color
     self.textColor = textColor
   end
 
-
   def parse(t)
     lines = t.split("\n")
-    return lines.map.with_index { | l, index |
+    lines.map.with_index do |l, index|
       type = :middle
       type = :first if index == 0
       type = :last if index == lines.count - 1
-      
+
       Line.new(index + 1, l, type)
-    }
+    end
   end
 
   def render(t)
     lines = parse(t)
-    lines.each { | l | 
+    lines.each do |l|
       if l.hash_bold
         tokens = l.to_tokens(textColor, backgorundColor)
-        tokens.each { | t | renderToken(t) }
+        tokens.each { |t| renderToken(t) }
         mergeTokensIntoLine(l.index)
         cleanupTokens
-      else 
+      else
         renderLine(l)
       end
-    }
+    end
     mergeLines
     cleanup
   end
@@ -115,8 +122,8 @@ class Generator
       #{line.extra} \
       label:"#{line.text}" \
       "#{prefix}_ln_#{line.index}_.png"
-      HEREDOC
-    system( command )
+    HEREDOC
+    system(command)
   end
 
   def renderToken(token)
@@ -129,44 +136,42 @@ class Generator
       #{token.extra} \
       label:"#{token.text}" \
       "#{prefix}_tk_#{token.index}_.png"
-      HEREDOC
-    system( command )
+    HEREDOC
+    system(command)
   end
-
 
   def mergeTokensIntoLine(index)
     command = "convert #{prefix}_tk*.png -gravity Center -background \"#{backgorundColor}\" +append #{prefix}_ln_#{index}.png"
-    system( command )
+    system(command)
   end
 
   def mergeLines
     command = "convert #{prefix}_ln*.png -bordercolor \"#{backgorundColor}\" -append -border 160 #{prefix}_full.png"
-    system( command )
+    system(command)
   end
 
   def cleanup
     command = "rm -f #{prefix}_ln*.png"
-    system( command )
+    system(command)
   end
 
   def cleanupTokens
     command = "rm -f #{prefix}_tk*.png"
-    system( command )
+    system(command)
   end
 
   def random_name
-    (0...8).map { (65 + rand(26)).chr }.join
+    (0...8).map { rand(65..90).chr }.join
   end
 end
 
-
-colors = {green: "rgb(135, 185, 25)", red: "rgb(229, 50, 56)", blue: "rgb(0, 98, 212)", yellow: "rgb(245, 175, 2)"}
+colors = { green: 'rgb(135, 185, 25)', red: 'rgb(229, 50, 56)', blue: 'rgb(0, 98, 212)', yellow: 'rgb(245, 175, 2)' }
 
 # colors = {green: "rgb(135, 185, 25)" }
 
-t1 = <<-HEREDOC
-Say it like
-*Kleinanzeigen*
+t1 = <<~HEREDOC
+  Say it like
+  *Kleinanzeigen*
 HEREDOC
 
 # t2 = <<-HEREDOC
@@ -175,7 +180,6 @@ HEREDOC
 # sed do eiusmod *tempor* incididunt
 # ut labore et dolore magna aliqua
 # HEREDOC
-
 
 # t3 = <<-HEREDOC
 # Lorem ipsum dolor sit amet,
@@ -189,11 +193,8 @@ HEREDOC
 
 # texts.each do | textname, t |
 #   colors.each do | colorname, color |
-  
+
 #     g = Generator.new("#{colorname.to_s}_#{textname.to_s}", color)
 #     g.render(t)
 #   end
 # end
-
-
-
